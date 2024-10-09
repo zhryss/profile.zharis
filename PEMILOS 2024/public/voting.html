@@ -13,13 +13,12 @@
         <br>
         <label for="kandidat">Pilih Kandidat:</label>
         <select name="kandidat" required>
-            <!-- Isi dengan opsi kandidat dari database -->
             <?php
-            include 'connect.php';
+            include 'src/connect.php';
             $query = "SELECT * FROM kandidat";
             $result = pg_query($conn, $query);
             while ($row = pg_fetch_assoc($result)) {
-                echo "<option value='{$row['id_kandidat']}'>{$row['id_kandidat']}</option>";
+                echo "<option value='{$row['id_kandidat']}'>{$row['id_kelas']}</option>";
             }
             ?>
         </select>
