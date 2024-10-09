@@ -15,7 +15,7 @@
         <select name="kandidat" required>
             <!-- Isi dengan opsi kandidat dari database -->
             <?php
-            include 'src/connect.php';
+            include 'https://profilezharis.vercel.app/src/connect.php';
             $query = "SELECT * FROM kandidat";
             $result = pg_query($conn, $query);
             while ($row = pg_fetch_assoc($result)) {
