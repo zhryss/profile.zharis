@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting</title>
+</head>
+<body>
+    <h2>Halaman Voting</h2>
+    <form action="src/submit_vote.php" method="POST">
+        <label for="classID">ID Kelas:</label>
+        <input type="text" name="classID" required>
+        <br>
+        <label for="kandidat">Pilih Kandidat:</label>
+        <select name="kandidat" required>
+            <!-- Isi dengan opsi kandidat dari database -->
+            <?php
+            include 'src/connect.php';
+            $query = "SELECT * FROM kandidat";
+            $result = pg_query($conn, $query);
+            while ($row = pg_fetch_assoc($result)) {
+                echo "<option value='{$row['id_kandidat']}'>{$row['id_kandidat']}</option>";
+            }
+            ?>
+        </select>
+        <br>
+        <button type="submit">Suara</button>
+    </form>
+</body>
+</html>
