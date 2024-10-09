@@ -2,12 +2,6 @@
 session_start();
 include 'connect.php';  // Koneksi ke Supabase
 
-// Cek apakah pengguna sudah login
-if (!isset($_SESSION['username'])) {
-    header('Location: ../index.html');
-    exit();
-}
-
 // Ambil data dari form
 $id_kandidat = $_POST['kandidat'];
 $id_kelas = $_POST['classID'];
@@ -23,5 +17,6 @@ if (pg_query($conn, $query)) {
 }
 
 // Arahkan kembali ke halaman voting
-header('Location: ../voting.html');
+header('Location: voting.html');
+exit();
 ?>

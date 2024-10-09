@@ -14,14 +14,14 @@
         </tr>
         <?php
         include 'src/connect.php';
-        $query = "SELECT k.id_kandidat, COUNT(v.id_kandidat) AS total_suara
+        $query = "SELECT k.nama, COUNT(v.id_kandidat) AS total_suara
                   FROM voting v
                   JOIN kandidat k ON v.id_kandidat = k.id_kandidat
-                  GROUP BY k.id_kandidat";
+                  GROUP BY k.nama";
         $result = pg_query($conn, $query);
         while ($row = pg_fetch_assoc($result)) {
             echo "<tr>
-                    <td>{$row['id_kandidat']}</td>
+                    <td>{$row['nama']}</td>
                     <td>{$row['total_suara']}</td>
                   </tr>";
         }
