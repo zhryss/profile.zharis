@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penghitung Klik Foto</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> <!-- SheetJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script> <!-- Supabase -->
+    <style>
+        .photo-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .photo {
+            display: inline-block;
+            text-align: center;
+        }
+        .photo img {
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Selamat Datang, <span id="username"></span></h2>
+
+    <div class="photo-container">
+        <div class="photo">
+            <p id="count1">0</p>
+            <img src="photo1.jpg" alt="Foto 1" onclick="incrementCounter(1)">
+        </div>
+        <div class="photo">
+            <p id="count2">0</p>
+            <img src="photo2.jpg" alt="Foto 2" onclick="incrementCounter(2)">
+        </div>
+        <div class="photo">
+            <p id="count3">0</p>
+            <img src="photo3.jpg" alt="Foto 3" onclick="incrementCounter(3)">
+        </div>
+    </div>
+
+    <button onclick="submitResults()">Kirim</button>
+
+    <script>
+        // Menampilkan username
+        document.getElementById('username').textContent = localStorage.getItem('username') || 'Pengguna';
+
+        // Konfigurasi Supabase
+        const supabaseUrl = 'https://wokunjzwnzfvgtvoccmg.supabase.co'; // Ganti dengan URL dari Supabase
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indva3Vuanp3bnpmdmd0dm9jY21nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg0ODA1NTksImV4cCI6MjA0NDA1NjU1OX0.YlMNRYmmRjD_y_hNC0LyYfnZ67tpDkwJDQ0RRs86KlQ'; // Ganti dengan anon key dari Supabase
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Fungsi untuk menambah penghitung
+        function incrementCounter(photoNumber) {
+            const counter = document.getElementById('count' + photoNumber);
+            let currentCount = parseInt(counter.textContent);
+            counter.textContent = currentCount + 1;
+        }
+
+        // Fungsi untuk mengirim hasil ke Supabase dan buat file Excel
+        async function submitResults() {
+            const username = localStorage.getItem('username');
+            const count1 = document.getElementById('count1').textContent;
+            const count2 = document.getElementById('count2').textContent;
+            const count3 = document.getElementById('count3').textContent;
+            const totalClicks = parseInt(count1) + parseInt(count2) + parseInt(count3);
+
+            // Simpan hasil ke Supabase
+            const { data, error } = await supabase
+                .from('click_data')
+                .insert([
+                    {
+                        username: username,
+                        photo1_clicks: parseInt(count1),
+                        photo2_clicks: parseInt(count2),
+                        photo3_clicks: parseInt(count3),
+                        total_clicks: totalClicks
+                    }
+                ]);
+
+            if (error) {
+                console.error('Error saving data:', error);
+            } else {
+                console.log('Data saved successfully:', data);
+            }
+
+            // Data yang akan dimasukkan ke dalam file Excel
+            const excelData = [
+                ['Username', 'Foto 1', 'Foto 2', 'Foto 3', 'Total Klik'],
+                [username, count1, count2, count3, totalClicks]
+            ];
+
+            // Membuat file Excel
+            const wb = XLSX.utils.book_new(); // Membuat workbook baru
+            const ws = XLSX.utils.aoa_to_sheet(excelData); // Buat worksheet dari data array
+            XLSX.utils.book_append_sheet(wb, ws, 'Hasil Klik'); // Tambahkan worksheet ke workbook
+
+            // Ekspor file Excel
+            XLSX.writeFile(wb, 'Hasil_Klik.xlsx'); // Nama file hasil
+
+            // Pindah ke halaman hasil
+            window.location.href = "results.html";
+        }
+    </script>
+</body>
+</html>
