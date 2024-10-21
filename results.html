@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Voting</title>
+</head>
+
+<body>
+    <h2>Hasil Voting untuk <span id="username"></span></h2>
+
+    <p>Jumlah klik untuk Foto 1: <span id="result1"></span></p>
+    <p>Jumlah klik untuk Foto 2: <span id="result2"></span></p>
+    <p>Jumlah klik untuk Foto 3: <span id="result3"></span></p>
+    <p>Total Klik: <span id="totalClicks"></span></p>
+
+    <script>
+        // Mengambil data dari localStorage
+        document.getElementById('username').textContent = localStorage.getItem('username') || 'Pengguna';
+        document.getElementById('result1').textContent = localStorage.getItem('count1') || 0;
+        document.getElementById('result2').textContent = localStorage.getItem('count2') || 0;
+        document.getElementById('result3').textContent = localStorage.getItem('count3') || 0;
+        document.getElementById('totalClicks').textContent = localStorage.getItem('totalClicks') || 0;
+    </script>
+</body>
+
+</html>

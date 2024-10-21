@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penghitung Klik Foto</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        .photo-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .photo {
+            display: inline-block;
+            text-align: center;
+        }
+
+        .photo img {
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Selamat Datang, <span id="username"></span></h2>
+
+    <div class="photo-container">
+        <div class="photo">
+            <p id="count1">0</p>
+            <img src="photo1.jpg" alt="Foto 1" onclick="incrementCounter(1)">
+        </div>
+        <div class="photo">
+            <p id="count2">0</p>
+            <img src="photo2.jpg" alt="Foto 2" onclick="incrementCounter(2)">
+        </div>
+        <div class="photo">
+            <p id="count3">0</p>
+            <img src="photo3.jpg" alt="Foto 3" onclick="incrementCounter(3)">
+        </div>
+    </div>
+
+    <button onclick="submitResults()">Kirim</button>
+
+    <script>
+        // Menampilkan username
+        document.getElementById('username').textContent = localStorage.getItem('username') || 'Pengguna';
+
+        // Fungsi untuk menambah penghitung
+        function incrementCounter(photoNumber) {
+            const counter = document.getElementById('count' + photoNumber);
+            let currentCount = parseInt(counter.textContent);
+            currentCount += 1; // Tambah jumlah klik
+            counter.textContent = currentCount; // Update tampilan
+
+            // Simpan hasil ke localStorage
+            localStorage.setItem('count' + photoNumber, currentCount);
+            localStorage.setItem('totalClicks', totalClicks);
+        }
+
+
+        // Fungsi untuk mengirim hasil dan buat file Excel
+        function submitResults() {
+            const username = localStorage.getItem('username');
+            const count1 = document.getElementById('count1').textContent;
+            const count2 = document.getElementById('count2').textContent;
+            const count3 = document.getElementById('count3').textContent;
+            const totalClicks = parseInt(count1) + parseInt(count2) + parseInt(count3);
+
+            // Data yang akan dikirimkan ke Apps Script
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('count1', count1);
+            formData.append('count2', count2);
+            formData.append('count3', count3);
+            formData.append('totalClicks', totalClicks);
+
+            // Ganti URL berikut dengan URL Web App dari Apps Script Anda
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwENDideMxVvfm6uDjZ1iL8-D84YIT8qbQXksIIky4GPUTbWjA-8is1F04377dL_WFL/exec';
+
+            // Kirim data ke Google Apps Script
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Redirect ke halaman hasil setelah sukses
+                    window.location.href = "results.html";
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+    </script>
+</body>
+
+</html>
