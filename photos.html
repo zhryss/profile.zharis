@@ -59,17 +59,20 @@
 
             // Simpan hasil ke localStorage
             localStorage.setItem('count' + photoNumber, currentCount);
-            localStorage.setItem('totalClicks', totalClicks);
         }
-
 
         // Fungsi untuk mengirim hasil dan buat file Excel
         function submitResults() {
             const username = localStorage.getItem('username');
-            const count1 = document.getElementById('count1').textContent;
-            const count2 = document.getElementById('count2').textContent;
-            const count3 = document.getElementById('count3').textContent;
-            const totalClicks = parseInt(count1) + parseInt(count2) + parseInt(count3);
+            const count1 = parseInt(localStorage.getItem('count1')) || 0;
+            const count2 = parseInt(localStorage.getItem('count2')) || 0;
+            const count3 = parseInt(localStorage.getItem('count3')) || 0;
+
+            // Hitung total klik
+            const totalClicks = count1 + count2 + count3;
+
+            // Simpan total klik ke localStorage
+            localStorage.setItem('totalClicks', totalClicks);
 
             // Data yang akan dikirimkan ke Apps Script
             const formData = new FormData();
@@ -92,6 +95,7 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
+
 
     </script>
 </body>
